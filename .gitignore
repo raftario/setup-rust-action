@@ -92,6 +92,3 @@ typings/
 
 # NPM lockfile (use Yarn instead)
 package-lock.json
-
-# TSC output
-lib/
