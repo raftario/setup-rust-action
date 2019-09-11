@@ -1,8 +1,8 @@
 {
-  "name": "javascript-template-action",
+  "name": "setup-rust-action",
   "version": "0.0.0",
   "private": true,
-  "description": "JavaScript template action",
+  "description": "Setup a Rust environment and add it to the PATH, additionally providing custom target support",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -10,14 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/javascript-template.git"
+    "url": "git+https://github.com/raftario/setup-rust-action.git"
   },
   "keywords": [
     "actions",
+    "rust",
     "node",
     "setup"
   ],
-  "author": "YourNameOrOrganization",
+  "author": "Raphaël Thériault",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.0.0"

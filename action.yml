@@ -1,10 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Setup Rust environment'
+description: 'Setup a Rust environment and add it to the PATH, additionally providing custom target support'
+author: 'Raphaël Thériault'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  rust-channel:
+    description: 'Rust channel (version) to use'
+    default: 'stable'
 runs:
   using: 'node12'
   main: 'lib/main.js'
