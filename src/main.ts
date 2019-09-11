@@ -7,15 +7,22 @@ import { ExecOptions } from "@actions/exec/lib/interfaces";
 
 import * as path from "path";
 
+const pjPath = path.join(__dirname, "..", "package.json");
 // tslint:disable:no-var-requires
-const pj = require("../package.json");
+const pj = require(pjPath);
 
-async function execSuccess(commandLine: string, args?: string[] | undefined, options?: ExecOptions | undefined) {
+async function aExec(commandLine: string, args?: string[], options?: ExecOptions) {
   const ec: number = await exec.exec(commandLine, args, options);
   if (ec === 0) {
     return ec;
   } else {
-    throw new Error("Command exited with non zero error code " + ec);
+    throw new Error("Command exited with non zero error code: " + ec);
+  }
+}
+
+async function aForeach<T>(array: T[], callback: (element: T) => Promise<void>) {
+  for (const element of array) {
+    await callback(element);
   }
 }
 
@@ -29,14 +36,14 @@ async function restore() {
   // Restore cargo and rustup
   try {
     core.debug("Restoring cargo");
-    const cachedCargoPath: string = tc.find("cargo", pj.version + "-" + rustToolchain);
+    const cachedCargoPath: string = tc.find("cargo", `${pj.version}-${rustToolchain}`);
     await io.mv(cachedCargoPath, cargoPath, moveOptions);
   } catch (error) {
     core.error(error.message);
   }
   try {
     core.debug("Restoring rustup");
-    const cachedRustupPath: string = tc.find("rustup", pj.version + "-" + rustToolchain);
+    const cachedRustupPath: string = tc.find("rustup", `${pj.version}-${rustToolchain}`);
     await io.mv(cachedRustupPath, rustupPath, moveOptions);
   } catch (error) {
     core.error(error.message);
@@ -53,6 +60,66 @@ async function prepare() {
     core.addPath(cargoBinPath);
   }
 
+  // Create aliases
+  if (targetAliases || allAliases && !windows) {
+    // Commands affected by target and --all
+    const commands: string[] = [
+      "cargo build",
+      "cargo run",
+      "cargo test",
+      "cargo bench",
+    ];
+    if (installCross) {
+      commands.concat([
+        "cross build",
+        "cross run",
+        "cross test",
+        "cross bench",
+      ]);
+    }
+
+    // Create target aliases
+    if (targetAliases && rustTarget.length > 0) {
+      core.debug("Creating target aliases");
+
+      // Commands affected by target
+      const targetCommands: string[] = [
+        "rustc",
+      ];
+      commands.concat(targetCommands);
+
+      aForeach(commands, async (command) => {
+        await aExec(`alias ${command}='${command} --target ${rustTarget}'`);
+      });
+
+      commands.filter((command) => !targetCommands.includes(command));
+    }
+
+    // Create --all aliases
+    if (allAliases) {
+      core.debug("Creating --all aliases");
+
+      // Commands affected by --all
+      const allCommands: string[] = [
+        "cargo check",
+        "cargo doc",
+      ];
+      if (installCross) {
+        allCommands.concat([
+          "cross check",
+          "cross doc",
+        ]);
+      }
+      commands.concat(allCommands);
+
+      aForeach(commands, async (command) => {
+        await aExec(`alias ${command}='${command} --all'`);
+      });
+
+      commands.filter((command) => !allCommands.includes(command));
+    }
+  }
+
   core.endGroup();
 }
 
@@ -67,14 +134,14 @@ async function install() {
 
     // Update rustup itself
     core.debug("Updating rustup");
-    await execSuccess("rustup self update");
+    await aExec("rustup self update");
 
     // Set default toolchain based on inputs
     core.debug("Setting default toolchain: " + rustToolchain);
-    await execSuccess("rustup default", [rustToolchain]);
+    await aExec("rustup default", [rustToolchain]);
 
     // Update the toolchain
-    await execSuccess("rustup update");
+    await aExec("rustup update");
   } catch (error) {
     core.debug("rustup is not installed");
 
@@ -96,9 +163,9 @@ async function install() {
     // Run the installer
     core.debug("Installing rustup");
     if (windows) {
-      await execSuccess(installerPath, installerArgs);
+      await aExec(installerPath, installerArgs);
     } else {
-      await execSuccess("sh " + installerPath + " --", installerArgs);
+      await aExec(`sh ${installerPath} --`, installerArgs);
     }
 
     // Verifies the installation was successful
@@ -107,9 +174,15 @@ async function install() {
   }
 
   // Install target
-  core.debug("Installing target: " + rustTarget);
   if (rustTarget.length > 0) {
-    await execSuccess("rustup target add" [rustTarget]);
+    core.debug("Installing target: " + rustTarget);
+    await aExec("rustup target add", [rustTarget]);
+  }
+
+  // Install cross
+  if (installCross) {
+    core.debug("Installing cross");
+    await aExec("cargo install", ["cross"]);
   }
 
   core.endGroup();
@@ -121,13 +194,13 @@ async function cache() {
   // Cache .cargo and .rustup
   try {
     core.debug("Caching cargo");
-    await tc.cacheDir(cargoPath, "cargo", pj.version + "-" + rustToolchain);
+    await tc.cacheDir(cargoPath, "cargo", `${pj.version}-${rustToolchain}`);
   } catch (error) {
     core.error(error.message);
   }
   try {
     core.debug("Caching rustup");
-    await tc.cacheDir(rustupPath, "rustup", pj.version + "-" + rustToolchain);
+    await tc.cacheDir(rustupPath, "rustup", `${pj.version}-${rustToolchain}`);
   } catch (error) {
     core.error(error.message);
   }
@@ -159,6 +232,10 @@ const rustupPath: string = path.join(homePath, ".rustup");
 const rustChannel: string = core.getInput("rust-channel");
 const rustHost: string = core.getInput("rust-host");
 const rustTarget: string = core.getInput("rust-target");
+const installCross: boolean = core.getInput("install-cross") === "true";
+const targetAliases: boolean = core.getInput("target-aliases") === "true";
+const allAliases: boolean = core.getInput("target-aliases") === "true";
+
 const rustToolchain: string = rustChannel.length > 0
   ? rustChannel + (rustHost.length > 0 ? "-" + rustHost : "")
   : "stable";

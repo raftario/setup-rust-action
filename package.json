@@ -1,5 +1,5 @@
 {
-  "name": "setup-rust-action",
+  "name": "setup-rust",
   "version": "1.0.0",
   "private": true,
   "description": "Setup a Rust environment and add it to the PATH, additionally providing custom target support",

@@ -11,6 +11,15 @@ inputs:
   rust-target:
     description: 'Rust target to compile for (defaults to current host)'
     default: ''
+  install-cross:
+    description: 'Install cross (Unix only) (anything but ''true'' defaults to ''false'')'
+    default: 'false'
+  target-aliases:
+    description: 'Create aliases for specified target (Unix only) (anything but ''true'' defaults to ''false'')'
+    default: 'false'
+  all-aliases:
+    description: 'Create --all aliases for affected commands (Unix only) (anything but ''true'' defaults to ''false'')'
+    default: 'false'
 runs:
   using: 'node12'
   main: 'lib/main.js'
