@@ -4,7 +4,7 @@ author: 'Raphaël Thériault'
 inputs:
   rust-channel:
     description: 'Rust channel (version) to use (defaults to stable)'
-    default: 'stable'
+    default: ''
   rust-host:
     description: 'Rust host to use (defaults to current platform)'
     default: ''

@@ -1,6 +1,6 @@
 {
   "name": "setup-rust-action",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Setup a Rust environment and add it to the PATH, additionally providing custom target support",
   "main": "lib/main.js",
@@ -18,17 +18,31 @@
     "node",
     "setup"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "jest && lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": ["tslint --fix", "git add"]
+  },
   "author": "Raphaël Thériault",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.1.0"
+    "@actions/core": "^1.1.0",
+    "@actions/exec": "^1.0.1",
+    "@actions/io": "^1.0.1",
+    "@actions/tool-cache": "^1.1.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.5",
+    "husky": "^3.0.5",
     "jest": "^24.9.0",
-    "jest-circus": "^24.9.1",
+    "jest-circus": "^24.9.0",
+    "lint-staged": "^9.2.5",
     "ts-jest": "^24.0.2",
+    "tslint": "^5.20.0",
     "typescript": "^3.6.3"
   }
 }
