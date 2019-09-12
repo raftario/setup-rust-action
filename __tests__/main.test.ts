@@ -6,18 +6,23 @@ import install from "../src/install";
 import prepare from "../src/prepare";
 
 describe("setup tests", () => {
+  const windows: boolean = process.platform === "win32";
+
   // Custom paths
   const homePath: string = path.join(__dirname, "home");
-  process.env.HOME = homePath;
   const cargoPath: string = path.join(homePath, ".cargo");
-  process.env.CARGO_HOME = cargoPath;
   const rustupPath: string = path.join(homePath, ".rustup");
-  process.env.RUSTUP_HOME = rustupPath;
   const cargoBinPath: string = path.join(cargoPath, "bin");
 
   beforeAll(async () => {
+    // Remove temp dirs
     await io.rmRF(homePath);
     await io.mkdirP(homePath);
+
+    // Set environment
+    process.env.HOME = homePath;
+    process.env.CARGO_HOME = cargoPath;
+    process.env.RUSTUP_HOME = rustupPath;
     core.addPath(cargoBinPath);
   });
 
@@ -39,20 +44,19 @@ describe("setup tests", () => {
     await install(rustChannel, rustHost, rustTarget, installCross);
   }, 10 * 60 * 1000);
 
-  it("Finishes the installation step with custom values", async () => {
-    if (process.platform === "win32") {
-      return;
-    }
-    const macos: boolean = process.platform === "darwin";
+  if (!windows) {
+    it("Finishes the installation step with custom values", async () => {
+      const macos: boolean = process.platform === "darwin";
 
-    // Inputs
-    const rustChannel: string = "nightly";
-    const rustHost: string = macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu";
-    const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
-    const installCross: boolean = true;
+      // Inputs
+      const rustChannel: string = "nightly";
+      const rustHost: string = macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu";
+      const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
+      const installCross: boolean = true;
 
-    await install(rustChannel, rustHost, rustTarget, installCross);
-  }, 10 * 60 * 1000);
+      await install(rustChannel, rustHost, rustTarget, installCross);
+    }, 10 * 60 * 1000);
+  }
 
   it("Completes the full installation process with defaults", async () => {
     // Inputs
@@ -67,21 +71,20 @@ describe("setup tests", () => {
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   }, 10 * 60 * 1000);
 
-  it("Completes the full installation process with custom values", async () => {
-    if (process.platform === "win32") {
-      return;
-    }
-    const macos: boolean = process.platform === "darwin";
+  if (!windows) {
+    it("Completes the full installation process with custom values", async () => {
+      const macos: boolean = process.platform === "darwin";
 
-    // Inputs
-    const rustChannel: string = "nightly";
-    const rustHost: string = macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu";
-    const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
-    const installCross: boolean = true;
+      // Inputs
+      const rustChannel: string = "nightly";
+      const rustHost: string = macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu";
+      const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
+      const installCross: boolean = true;
 
-    await restore(cargoPath, rustupPath, rustChannel, rustHost);
-    await prepare(cargoPath);
-    await install(rustChannel, rustHost, rustTarget, installCross);
-    await cache(cargoPath, rustupPath, rustChannel, rustHost);
-  }, 10 * 60 * 1000);
+      await restore(cargoPath, rustupPath, rustChannel, rustHost);
+      await prepare(cargoPath);
+      await install(rustChannel, rustHost, rustTarget, installCross);
+      await cache(cargoPath, rustupPath, rustChannel, rustHost);
+    }, 10 * 60 * 1000);
+  }
 });
