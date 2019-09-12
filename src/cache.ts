@@ -21,14 +21,18 @@ export async function restore(cargoPath: string, rustupPath: string, rustChannel
   try {
     core.debug("Restoring cargo");
     const cachedCargoPath: string = tc.find("cargo", `${pj.version}-${rustToolchain}`);
-    await io.mv(cachedCargoPath, cargoPath, moveOptions);
+    if (cachedCargoPath.length > 0) {
+      await io.mv(cachedCargoPath, cargoPath, moveOptions);
+    }
   } catch (error) {
     core.error(error.message);
   }
   try {
     core.debug("Restoring rustup");
     const cachedRustupPath: string = tc.find("rustup", `${pj.version}-${rustToolchain}`);
-    await io.mv(cachedRustupPath, rustupPath, moveOptions);
+    if (cachedRustupPath.length > 0) {
+      await io.mv(cachedRustupPath, rustupPath, moveOptions);
+    }
   } catch (error) {
     core.error(error.message);
   }
