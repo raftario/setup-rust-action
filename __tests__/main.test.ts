@@ -37,7 +37,7 @@ describe("setup tests", () => {
     const installCross: boolean = false;
 
     await install(rustChannel, rustHost, rustTarget, installCross);
-  });
+  }, 10 * 60 * 1000);
 
   it("Finishes the installation step with custom values", async () => {
     if (process.platform === "win32") {
@@ -52,7 +52,7 @@ describe("setup tests", () => {
     const installCross: boolean = true;
 
     await install(rustChannel, rustHost, rustTarget, installCross);
-  });
+  }, 10 * 60 * 1000);
 
   it("Completes the full installation process with defaults", async () => {
     // Inputs
@@ -65,7 +65,7 @@ describe("setup tests", () => {
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, installCross);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
-  });
+  }, 10 * 60 * 1000);
 
   it("Completes the full installation process with custom values", async () => {
     if (process.platform === "win32") {
@@ -83,5 +83,5 @@ describe("setup tests", () => {
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, installCross);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
-  });
+  }, 10 * 60 * 1000);
 });
