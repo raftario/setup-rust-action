@@ -9,7 +9,7 @@ async function run() {
   const windows: boolean = process.platform === "win32";
 
   // Useful paths
-  const homePath: string = process.env.HOME || windows ? "%USERPROFILE%" : "~";
+  const homePath: string = process.env.HOME || (windows ? "%USERPROFILE%" : "~");
   const cargoPath: string = path.join(homePath, ".cargo");
   const rustupPath: string = path.join(homePath, ".rustup");
 
