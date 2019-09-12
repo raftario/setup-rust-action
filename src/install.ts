@@ -42,10 +42,12 @@ export default async function install(
     // Set installation args based on inputs
     const installerArgs: string[] = ["-y"];
     if (rustChannel.length > 0) {
-      installerArgs.push("--default-toolchain " + rustChannel);
+      installerArgs.push("--default-toolchain");
+      installerArgs.push(rustChannel);
     }
     if (rustHost.length > 0) {
-      installerArgs.push("--default-host " + rustHost);
+      installerArgs.push("--default-host");
+      installerArgs.push(rustHost);
     }
 
     // Run the installer
