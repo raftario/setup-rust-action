@@ -50,11 +50,7 @@ export default async function install(
 
     // Run the installer
     core.debug("Installing rustup");
-    if (windows) {
-      await aExec(installerPath, installerArgs);
-    } else {
-      await aExec(`cat ${installerPath} | sh -s --`, installerArgs);
-    }
+    await aExec(installerPath, installerArgs);
 
     // Verifies the installation was successful
     core.debug("Veryfing rustup installation");
