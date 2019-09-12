@@ -7,11 +7,6 @@ export default async function prepare(cargoPath: string, installCross: boolean) 
 
   const cargoBinPath: string = parseCargoBinPath(cargoPath);
 
-  // Add ~/.cargo/bin to path
-  if (!(process.env.PATH || "").includes(cargoBinPath)) {
-    core.addPath(cargoBinPath);
-  }
-
   // Check for tools
   core.debug("Veryfing rustc installation");
   await io.which("rustc", true);

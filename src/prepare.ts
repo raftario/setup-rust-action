@@ -6,9 +6,14 @@ export default async function prepare(cargoPath: string) {
 
   const cargoBinPath: string = parseCargoBinPath(cargoPath);
 
-  // Add ~/.cargo/bin to path
-  if (!(process.env.PATH || "").includes(cargoBinPath)) {
+  // Add cargo bin dir to path
+  const path: string = process.env.PATH || "";
+  if (!path.includes(cargoBinPath)) {
     core.addPath(cargoBinPath);
+    if (!path.endsWith(";")) {
+      process.env.PATH += ";";
+    }
+    process.env.PATH += cargoBinPath;
   }
 
   core.endGroup();
