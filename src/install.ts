@@ -53,7 +53,7 @@ export default async function install(
     if (windows) {
       await aExec(installerPath, installerArgs);
     } else {
-      await aExec(`sh ${installerPath} --`, installerArgs);
+      await aExec(`cat ${installerPath} | sh -s --`, installerArgs);
     }
 
     // Verifies the installation was successful
