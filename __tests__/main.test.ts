@@ -8,26 +8,21 @@ import prepare from "../src/prepare";
 describe("setup tests", () => {
   const windows: boolean = process.platform === "win32";
 
-  // Custom paths
-  const homePath: string = path.join(__dirname, "home");
-  const cargoPath: string = path.join(homePath, ".cargo");
-  const rustupPath: string = path.join(homePath, ".rustup");
-  const cargoBinPath: string = path.join(cargoPath, "bin");
+  // Useful paths
+  const homePath: string = process.env.HOME || (windows ? "%USERPROFILE%" : "~");
+  const cargoPath: string = process.env.CARGO_HOME || path.join(homePath, ".cargo");
+  const rustupPath: string = process.env.RUSTUP_HOME || path.join(homePath, ".rustup");
 
   beforeAll(async () => {
-    // Remove temp dirs
-    await io.rmRF(homePath);
-    await io.mkdirP(homePath);
-
-    // Set environment
-    process.env.HOME = homePath;
-    process.env.CARGO_HOME = cargoPath;
-    process.env.RUSTUP_HOME = rustupPath;
-    core.addPath(cargoBinPath);
+    // Remove installation dirs
+    await io.rmRF(cargoPath);
+    await io.rmRF(rustupPath);
   });
 
   afterAll(async () => {
-    await io.rmRF(homePath);
+    // Remove installation dirs
+    await io.rmRF(cargoPath);
+    await io.rmRF(rustupPath);
   });
 
   it("Finishes the preparation step", async () => {
