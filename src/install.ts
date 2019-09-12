@@ -50,6 +50,9 @@ export default async function install(
 
     // Run the installer
     core.debug("Installing rustup");
+    if (!windows) {
+      await aExec("chmod +x", [installerPath]);
+    }
     await aExec(installerPath, installerArgs);
 
     // Verifies the installation was successful
