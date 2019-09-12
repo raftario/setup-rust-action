@@ -4,6 +4,7 @@ import * as path from "path";
 import { cache, restore } from "../src/cache";
 import install from "../src/install";
 import prepare from "../src/prepare";
+import verify from "../src/verify";
 
 describe("setup tests", () => {
   const windows: boolean = process.platform === "win32";
@@ -23,10 +24,6 @@ describe("setup tests", () => {
     // Remove installation dirs
     await io.rmRF(cargoPath);
     await io.rmRF(rustupPath);
-  });
-
-  it("Finishes the preparation step", async () => {
-    await prepare(cargoPath);
   });
 
   it("Finishes the installation step with defaults", async () => {
@@ -63,6 +60,7 @@ describe("setup tests", () => {
     await restore(cargoPath, rustupPath, rustChannel, rustHost);
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, installCross);
+    await verify(cargoPath, installCross);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   }, 10 * 60 * 1000);
 
@@ -79,6 +77,7 @@ describe("setup tests", () => {
       await restore(cargoPath, rustupPath, rustChannel, rustHost);
       await prepare(cargoPath);
       await install(rustChannel, rustHost, rustTarget, installCross);
+      await verify(cargoPath, installCross);
       await cache(cargoPath, rustupPath, rustChannel, rustHost);
     }, 10 * 60 * 1000);
   }

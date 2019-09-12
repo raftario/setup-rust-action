@@ -3,6 +3,7 @@ import * as path from "path";
 import { cache, restore } from "./cache";
 import install from "./install";
 import prepare from "./prepare";
+import verify from "./verify";
 
 async function run() {
   // System info
@@ -23,6 +24,7 @@ async function run() {
     await restore(cargoPath, rustupPath, rustChannel, rustHost);
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, installCross);
+    await verify(cargoPath, installCross);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   } catch (error) {
     core.setFailed(error.message);

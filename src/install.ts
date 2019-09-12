@@ -56,10 +56,6 @@ export default async function install(
       await aExec("chmod +x", [installerPath]);
     }
     await aExec(installerPath, installerArgs);
-
-    // Verifies the installation was successful
-    core.debug("Veryfing rustup installation");
-    await io.which("rustup", true);
   }
 
   // Install target

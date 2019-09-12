@@ -1,11 +1,10 @@
 import * as core from "@actions/core";
-import * as path from "path";
-import { aExec, aForeach } from "./misc";
+import { parseCargoBinPath } from "./misc";
 
 export default async function prepare(cargoPath: string) {
   core.startGroup("Prepare setup");
 
-  const cargoBinPath: string = path.join(cargoPath, "bin");
+  const cargoBinPath: string = parseCargoBinPath(cargoPath);
 
   // Add ~/.cargo/bin to path
   if (!(process.env.PATH || "").includes(cargoBinPath)) {

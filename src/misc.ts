@@ -1,5 +1,7 @@
 import * as exec from "@actions/exec";
 import { ExecOptions } from "@actions/exec/lib/interfaces";
+import * as io from "@actions/io";
+import * as path from "path";
 
 export async function aExec(commandLine: string, args?: string[], options?: ExecOptions) {
     const ec: number = await exec.exec(commandLine, args, options);
@@ -20,4 +22,8 @@ export function parseRustToolchain(rustChannel: string, rustHost: string): strin
   return rustChannel.length > 0
     ? rustChannel + (rustHost.length > 0 ? "-" + rustHost : "")
     : "stable";
+}
+
+export function parseCargoBinPath(cargoPath: string): string {
+  return path.join(cargoPath, "bin");
 }
