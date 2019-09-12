@@ -18,12 +18,10 @@ async function run() {
   const rustHost: string = core.getInput("rust-host");
   const rustTarget: string = core.getInput("rust-target");
   const installCross: boolean = core.getInput("install-cross") === "true";
-  const targetAliases: boolean = core.getInput("target-aliases") === "true";
-  const allAliases: boolean = core.getInput("target-aliases") === "true";
 
   try {
     await restore(cargoPath, rustupPath, rustChannel, rustHost);
-    await prepare(cargoPath, rustTarget, installCross, targetAliases, allAliases);
+    await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, installCross);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   } catch (error) {

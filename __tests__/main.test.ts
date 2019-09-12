@@ -25,29 +25,8 @@ describe("setup tests", () => {
     await io.rmRF(homePath);
   });
 
-  it("Finishes the preparation step with defaults", async () => {
-    // Inputs
-    const rustTarget: string = "";
-    const installCross: boolean = false;
-    const targetAliases: boolean = false;
-    const allAliases: boolean = false;
-
-    await prepare(cargoPath, rustTarget, installCross, targetAliases, allAliases);
-  });
-
-  it("Finishes the preparation step with custom values", async () => {
-    if (process.platform === "win32") {
-      return;
-    }
-    const macos: boolean = process.platform === "darwin";
-
-    // Inputs
-    const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
-    const installCross: boolean = true;
-    const targetAliases: boolean = true;
-    const allAliases: boolean = true;
-
-    await prepare(cargoPath, rustTarget, installCross, targetAliases, allAliases);
+  it("Finishes the preparation step", async () => {
+    await prepare(cargoPath);
   });
 
   it("Finishes the installation step with defaults", async () => {
@@ -81,11 +60,9 @@ describe("setup tests", () => {
     const rustHost: string = "";
     const rustTarget: string = "";
     const installCross: boolean = false;
-    const targetAliases: boolean = false;
-    const allAliases: boolean = false;
 
     await restore(cargoPath, rustupPath, rustChannel, rustHost);
-    await prepare(cargoPath, rustTarget, installCross, targetAliases, allAliases);
+    await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, installCross);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   });
@@ -101,11 +78,9 @@ describe("setup tests", () => {
     const rustHost: string = macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu";
     const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
     const installCross: boolean = true;
-    const targetAliases: boolean = true;
-    const allAliases: boolean = true;
 
     await restore(cargoPath, rustupPath, rustChannel, rustHost);
-    await prepare(cargoPath, rustTarget, installCross, targetAliases, allAliases);
+    await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, installCross);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   });
