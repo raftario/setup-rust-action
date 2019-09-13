@@ -44,7 +44,7 @@ describe("setup tests", () => {
       const rustChannel: string = "nightly";
       const rustHost: string = macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu";
       const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
-      const installCross: boolean = true;
+      const installCross: boolean = false;
 
       await install(rustChannel, rustHost, rustTarget, installCross);
     }, 10 * 60 * 1000);
@@ -69,8 +69,8 @@ describe("setup tests", () => {
       const macos: boolean = process.platform === "darwin";
 
       // Inputs
-      const rustChannel: string = "nightly";
-      const rustHost: string = macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu";
+      const rustChannel: string = "";
+      const rustHost: string = "";
       const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
       const installCross: boolean = true;
 
