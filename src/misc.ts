@@ -1,6 +1,5 @@
 import * as exec from "@actions/exec";
 import { ExecOptions } from "@actions/exec/lib/interfaces";
-import * as io from "@actions/io";
 import * as path from "path";
 
 export async function aExec(commandLine: string, args?: string[], options?: ExecOptions) {
