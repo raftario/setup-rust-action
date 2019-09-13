@@ -14,22 +14,24 @@ export default async function install(
   const windows: boolean = process.platform === "win32";
   const rustToolchain: string = parseRustToolchain(rustChannel, rustHost);
 
+  let rustupBin: string = "";
+
   try {
     // Check for rustup (enters catch arm on failure)
     core.debug("Checking for rustup installation");
-    await io.which("rustup", true);
+    rustupBin = await io.which("rustup", true);
     core.debug("rustup is installed");
 
     // Update rustup itself
     core.debug("Updating rustup");
-    await aExec("rustup self update");
+    await aExec(rustupBin, ["self", "update"]);
 
     // Set default toolchain based on inputs
     core.debug("Setting default toolchain: " + rustToolchain);
-    await aExec("rustup default", [rustToolchain]);
+    await aExec(rustupBin, ["default", rustToolchain]);
 
     // Update the toolchain
-    await aExec("rustup update");
+    await aExec(rustupBin, ["update"]);
   } catch (error) {
     core.debug("rustup is not installed");
 
@@ -53,21 +55,27 @@ export default async function install(
     // Run the installer
     core.debug("Installing rustup");
     if (!windows) {
-      await aExec("chmod +x", [installerPath]);
+      await aExec("chmod", ["+x", installerPath]);
     }
     await aExec(installerPath, installerArgs);
+  }
+
+  // Get rustup binary path
+  if (rustupBin.length < 0) {
+    rustupBin = await io.which("rustup", true);
   }
 
   // Install target
   if (rustTarget.length > 0) {
     core.debug("Installing target: " + rustTarget);
-    await aExec("rustup target add", [rustTarget]);
+    await aExec(rustupBin, ["target", "add", rustTarget]);
   }
 
   // Install cross
   if (installCross) {
     core.debug("Installing cross");
-    await aExec("cargo install", ["cross"]);
+    const cargoBin: string = await io.which("cargo", true);
+    await aExec(cargoBin, ["install", "cross"]);
   }
 
   core.endGroup();
