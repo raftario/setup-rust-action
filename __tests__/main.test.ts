@@ -3,6 +3,7 @@ import * as path from "path";
 import { cache, restore } from "../src/cache";
 import install from "../src/install";
 import prepare from "../src/prepare";
+import { ICustomInstalls } from "../src/types";
 import verify from "../src/verify";
 
 describe("setup tests", () => {
@@ -31,28 +32,42 @@ describe("setup tests", () => {
     const rustChannel: string = "";
     const rustHost: string = "";
     const rustTarget: string = "";
+    const installRustfmt: boolean = false;
+    const installClippy: boolean = false;
     const installCross: boolean = false;
+    const customInstalls: ICustomInstalls = {
+      rustfmt: installRustfmt,
+      clippy: installClippy,
+      cross: installCross,
+    };
 
     await restore(cargoPath, rustupPath, rustChannel, rustHost);
     await prepare(cargoPath);
-    await install(rustChannel, rustHost, rustTarget, installCross);
-    await verify(cargoPath, installCross);
+    await install(rustChannel, rustHost, rustTarget, customInstalls);
+    await verify(customInstalls);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   }, 10 * 60 * 1000);
 
-  it("Completes the setup process with a custom host and channel", async () => {
+  it("Completes the setup process with a custom host and channel and rustfmt and clippy", async () => {
     // Inputs
     const rustChannel: string = "nightly";
     const rustHost: string = windows
       ? "i686-pc-windows-msvc"
       : (macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu");
     const rustTarget: string = "";
+    const installRustfmt: boolean = true;
+    const installClippy: boolean = true;
     const installCross: boolean = false;
+    const customInstalls: ICustomInstalls = {
+      rustfmt: installRustfmt,
+      clippy: installClippy,
+      cross: installCross,
+    };
 
     await restore(cargoPath, rustupPath, rustChannel, rustHost);
     await prepare(cargoPath);
-    await install(rustChannel, rustHost, rustTarget, installCross);
-    await verify(cargoPath, installCross);
+    await install(rustChannel, rustHost, rustTarget, customInstalls);
+    await verify(customInstalls);
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   }, 10 * 60 * 1000);
 
@@ -62,12 +77,19 @@ describe("setup tests", () => {
       const rustChannel: string = "";
       const rustHost: string = "";
       const rustTarget: string = macos ? "armv7-apple-ios" : "armv7-linux-androideabi";
+      const installRustfmt: boolean = false;
+      const installClippy: boolean = false;
       const installCross: boolean = true;
+      const customInstalls: ICustomInstalls = {
+        rustfmt: installRustfmt,
+        clippy: installClippy,
+        cross: installCross,
+      };
 
       await restore(cargoPath, rustupPath, rustChannel, rustHost);
       await prepare(cargoPath);
-      await install(rustChannel, rustHost, rustTarget, installCross);
-      await verify(cargoPath, installCross);
+      await install(rustChannel, rustHost, rustTarget, customInstalls);
+      await verify(customInstalls);
       await cache(cargoPath, rustupPath, rustChannel, rustHost);
     }, 10 * 60 * 1000);
   }

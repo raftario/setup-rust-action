@@ -2,12 +2,13 @@ import * as core from "@actions/core";
 import * as io from "@actions/io";
 import * as tc from "@actions/tool-cache";
 import { aExec, parseRustToolchain } from "./misc";
+import { ICustomInstalls } from "./types";
 
 export default async function install(
   rustChannel: string,
   rustHost: string,
   rustTarget: string,
-  installCross: boolean,
+  customInstalls: ICustomInstalls,
 ) {
   core.startGroup("Install and/or update Rust toolchain");
 
@@ -71,8 +72,20 @@ export default async function install(
     await aExec(rustupBin, ["target", "add", rustTarget]);
   }
 
+  // Install rustfmt
+  if (customInstalls.rustfmt) {
+    core.debug("Installing rustfmt");
+    await aExec(rustupBin, ["component", "add", "rustfmt"]);
+  }
+
+  // Install clippy
+  if (customInstalls.clippy) {
+    core.debug("Installing clippy");
+    await aExec(rustupBin, ["component", "add", "clippy"]);
+  }
+
   // Install cross
-  if (installCross) {
+  if (customInstalls.cross) {
     core.debug("Installing cross");
     const cargoBin: string = await io.which("cargo", true);
     await aExec(cargoBin, ["install", "cross"]);

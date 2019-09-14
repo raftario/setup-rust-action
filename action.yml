@@ -11,8 +11,14 @@ inputs:
   rust-target:
     description: 'Rust target to compile for (defaults to current host)'
     default: ''
+  install-rustfmt:
+    description: 'Install rustfmt (anything but ''true'' defaults to ''false'')'
+    default: 'false'
+  install-clippy:
+    description: 'Install clippy (anything but ''true'' defaults to ''false'')'
+    default: 'false'
   install-cross:
-    description: 'Install cross (Unix only) (anything but ''true'' defaults to ''false'')'
+    description: 'Install cross (anything but ''true'' defaults to ''false'')'
     default: 'false'
 runs:
   using: 'node12'
