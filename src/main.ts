@@ -14,9 +14,6 @@ async function run() {
   const homePath: string = process.env.HOME || (windows ? "%USERPROFILE%" : "~");
   const cargoPath: string = process.env.CARGO_HOME || path.join(homePath, ".cargo");
   const rustupPath: string = process.env.RUSTUP_HOME || path.join(homePath, ".rustup");
-  const repoName: string = ((process.env.GITHUB_REPOSITORY || "user/repo").split("/").pop()) || "repo";
-  const workspacePath: string = process.env.GITHUB_WORKSPACE || path.join(homePath, "work", repoName, repoName);
-  const targetPath: string = path.join(workspacePath, "target");
 
   // Inputs
   const rustChannel: string = core.getInput("rust-channel");
@@ -34,12 +31,12 @@ async function run() {
 
   try {
     if (enableCache) {
-      await restore(cargoPath, rustupPath, targetPath);
+      await restore(cargoPath, rustupPath);
     }
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls, cargoPath);
     if (enableCache) {
-      await cache(cargoPath, rustupPath, targetPath);
+      await cache(cargoPath, rustupPath);
     }
     await verify(customInstalls);
   } catch (error) {

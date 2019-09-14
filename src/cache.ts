@@ -7,7 +7,7 @@ const pjPath = path.join(__dirname, "..", "package.json");
 // tslint:disable:no-var-requires
 const pj = require(pjPath);
 
-export async function restore(cargoPath: string, rustupPath: string, targetPath: string) {
+export async function restore(cargoPath: string, rustupPath: string) {
   core.startGroup("Restore cache");
 
   const copyOptions: io.CopyOptions = {
@@ -35,21 +35,10 @@ export async function restore(cargoPath: string, rustupPath: string, targetPath:
     core.error(error.message);
   }
 
-  // Restore target
-  try {
-    core.debug("Restoring build artifacts");
-    const cachedTargetPath: string = tc.find("target", pj.version);
-    if (cachedTargetPath.length > 0) {
-      await io.cp(cachedTargetPath, targetPath, copyOptions);
-    }
-  } catch (error) {
-    core.error(error.message);
-  }
-
   core.endGroup();
 }
 
-export async function cache(cargoPath: string, rustupPath: string, targetPath: string) {
+export async function cache(cargoPath: string, rustupPath: string) {
   core.startGroup("Cache");
 
   // Cache .cargo and .rustup
@@ -66,16 +55,8 @@ export async function cache(cargoPath: string, rustupPath: string, targetPath: s
     core.error(error.message);
   }
 
-  // Cache target
-  try {
-    core.debug("Caching build artifacts");
-    await tc.cacheDir(targetPath, "target", pj.version);
-  } catch (error) {
-    core.error(error.message);
-  }
-
   // Restore cache
-  await restore(cargoPath, rustupPath, targetPath);
+  await restore(cargoPath, rustupPath);
 
   core.endGroup();
 }
