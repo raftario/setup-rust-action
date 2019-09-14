@@ -20,7 +20,7 @@ export async function restore(cargoPath: string, rustupPath: string, rustChannel
   // Restore cargo and rustup
   try {
     core.debug("Restoring cargo");
-    const cachedCargoPath: string = tc.find("cargo", `${pj.version}-${rustToolchain}`);
+    const cachedCargoPath: string = tc.find("cargo", pj.version);
     if (cachedCargoPath.length > 0) {
       await io.mv(cachedCargoPath, cargoPath, moveOptions);
     }
@@ -29,7 +29,7 @@ export async function restore(cargoPath: string, rustupPath: string, rustChannel
   }
   try {
     core.debug("Restoring rustup");
-    const cachedRustupPath: string = tc.find("rustup", `${pj.version}-${rustToolchain}`);
+    const cachedRustupPath: string = tc.find("rustup", pj.version);
     if (cachedRustupPath.length > 0) {
       await io.mv(cachedRustupPath, rustupPath, moveOptions);
     }
@@ -48,13 +48,13 @@ export async function cache(cargoPath: string, rustupPath: string, rustChannel: 
   // Cache .cargo and .rustup
   try {
     core.debug("Caching cargo");
-    await tc.cacheDir(cargoPath, "cargo", `${pj.version}-${rustToolchain}`);
+    await tc.cacheDir(cargoPath, "cargo", pj.version);
   } catch (error) {
     core.error(error.message);
   }
   try {
     core.debug("Caching rustup");
-    await tc.cacheDir(rustupPath, "rustup", `${pj.version}-${rustToolchain}`);
+    await tc.cacheDir(rustupPath, "rustup", pj.version);
   } catch (error) {
     core.error(error.message);
   }

@@ -27,13 +27,18 @@ async function run() {
     clippy: installClippy,
     cross: installCross,
   };
+  const enableCache: boolean = core.getInput("cache") === "true";
 
   try {
-    await restore(cargoPath, rustupPath, rustChannel, rustHost);
+    if (enableCache) {
+      await restore(cargoPath, rustupPath, rustChannel, rustHost);
+    }
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls);
     await verify(customInstalls);
-    await cache(cargoPath, rustupPath, rustChannel, rustHost);
+    if (enableCache) {
+      await cache(cargoPath, rustupPath, rustChannel, rustHost);
+    }
   } catch (error) {
     core.setFailed(error.message);
   }

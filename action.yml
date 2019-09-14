@@ -12,6 +12,9 @@ inputs:
     description: 'Rust target to compile for (defaults to current host)'
     default: ''
   install-rustfmt:
+    description: 'Enable caching (anything but ''true'' defaults to ''false'')'
+    default: 'true'
+  install-rustfmt:
     description: 'Install rustfmt (anything but ''true'' defaults to ''false'')'
     default: 'false'
   install-clippy:

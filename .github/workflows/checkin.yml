@@ -20,6 +20,7 @@ jobs:
     - name: "Lint"
       run: yarn lint
     - name: "Check for uncommitted changes"
+      if: matrix.os == 'ubuntu-latest'
       # Ensure no changes, but ignore node_modules dir since dev/fresh ci deps installed.
       run: |
         git diff --exit-code --stat -- . ':!node_modules' \
