@@ -5,6 +5,7 @@
 This action sets up a Rust environment for use in actions by:
 
 - downloading and caching a version of Rust by channel and host and adding to PATH
+- optionally caching build artifacts
 - optionally downloading and caching a custom target
 - optionally downloading and caching commonly used cargo subcommands
 - optionally downloading and caching cross for cross-compiling

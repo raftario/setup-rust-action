@@ -10,7 +10,7 @@ const pj = require(pjPath);
 export async function restore(cargoPath: string, rustupPath: string, targetPath: string) {
   core.startGroup("Restore cache");
 
-  const moveOptions: io.MoveOptions = {
+  const copyOptions: io.CopyOptions = {
     force: true,
   };
 
@@ -19,7 +19,7 @@ export async function restore(cargoPath: string, rustupPath: string, targetPath:
     core.debug("Restoring cargo");
     const cachedCargoPath: string = tc.find("cargo", pj.version);
     if (cachedCargoPath.length > 0) {
-      await io.mv(cachedCargoPath, cargoPath, moveOptions);
+      await io.cp(cachedCargoPath, cargoPath, copyOptions);
     }
   } catch (error) {
     core.error(error.message);
@@ -28,7 +28,7 @@ export async function restore(cargoPath: string, rustupPath: string, targetPath:
     core.debug("Restoring rustup");
     const cachedRustupPath: string = tc.find("rustup", pj.version);
     if (cachedRustupPath.length > 0) {
-      await io.mv(cachedRustupPath, rustupPath, moveOptions);
+      await io.cp(cachedRustupPath, rustupPath, copyOptions);
     }
   } catch (error) {
     core.error(error.message);
@@ -39,7 +39,7 @@ export async function restore(cargoPath: string, rustupPath: string, targetPath:
     core.debug("Restoring build artifacts");
     const cachedTargetPath: string = tc.find("target", pj.version);
     if (cachedTargetPath.length > 0) {
-      await io.mv(cachedTargetPath, targetPath, moveOptions);
+      await io.cp(cachedTargetPath, targetPath, copyOptions);
     }
   } catch (error) {
     core.error(error.message);
@@ -72,6 +72,9 @@ export async function cache(cargoPath: string, rustupPath: string, targetPath: s
   } catch (error) {
     core.error(error.message);
   }
+
+  // Restore cache
+  await restore(cargoPath, rustupPath, targetPath);
 
   core.endGroup();
 }
