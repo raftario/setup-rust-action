@@ -15,9 +15,3 @@ export async function aForeach<T>(array: T[], callback: (element: T) => Promise<
     await callback(element);
   }
 }
-
-export function parseRustToolchain(rustChannel: string, rustHost: string): string {
-  return rustChannel.length > 0
-    ? rustChannel + (rustHost.length > 0 ? "-" + rustHost : "")
-    : "stable";
-}

@@ -1,8 +1,14 @@
 import * as core from "@actions/core";
 import * as io from "@actions/io";
 import * as tc from "@actions/tool-cache";
-import { aExec, parseRustToolchain } from "./misc";
+import { aExec } from "./misc";
 import { ICustomInstalls } from "./types";
+
+function parseRustToolchain(rustChannel: string, rustHost: string): string {
+  return rustChannel.length > 0
+    ? rustChannel + (rustHost.length > 0 ? "-" + rustHost : "")
+    : "stable";
+}
 
 export default async function install(
   rustChannel: string,
