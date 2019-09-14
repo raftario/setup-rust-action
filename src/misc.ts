@@ -1,6 +1,5 @@
 import * as exec from "@actions/exec";
 import { ExecOptions } from "@actions/exec/lib/interfaces";
-import * as path from "path";
 
 export async function aExec(commandLine: string, args?: string[], options?: ExecOptions) {
     const ec: number = await exec.exec(commandLine, args, options);
