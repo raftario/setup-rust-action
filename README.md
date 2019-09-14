@@ -19,8 +19,6 @@ Basic:
 steps:
 - uses: actions/checkout@v1
 - uses: raftario/setup-rust-action@v1
-  with:
-    rust-channel: 'stable'
 - run: cargo test
 ```
 
