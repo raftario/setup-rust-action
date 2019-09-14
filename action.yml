@@ -11,7 +11,7 @@ inputs:
   rust-target:
     description: 'Rust target to compile for (defaults to none)'
     default: ''
-  install-rustfmt:
+  cache:
     description: 'Enable caching (anything but ''true'' defaults to ''false'')'
     default: 'true'
   install-rustfmt:
