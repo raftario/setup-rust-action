@@ -1,6 +1,9 @@
 name: 'Setup Rust environment'
 description: 'Setup a Rust environment and add it to the PATH, additionally providing custom target support'
 author: 'Raphaël Thériault'
+branding:
+  icon: 'code'
+  color: 'orange'
 inputs:
   rust-channel:
     description: 'Rust channel (version) to use (defaults to stable)'
