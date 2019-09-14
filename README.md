@@ -1,9 +1,50 @@
-# JavaScript Action Template
+# setup-rust
 
-This template offers an easy way to get started writing a JavaScript action with TypeScript compile time support, unit testing with Jest and using the GitHub Actions Toolkit.
+[![https://github.com/raftario/setup-rust-action/workflows/Main%20workflow/badge.svg](GitHub Actions status)](https://github.com/raftario/setup-rust-action/actions)
 
-## Getting Started
+This action sets up a Rust environment for use in actions by:
 
-See the walkthrough located [here](https://github.com/actions/toolkit/blob/master/docs/typescript-action.md).
+- downloading and caching a version of Rust by channel and host and adding to PATH
+- optionally downloading and caching a custom target
+- optionally downloading and caching commonly used cargo subcommands
+- optionally downloading and caching cross for cross-compiling
 
-In addition to walking your through how to create an action, it also provides strategies for versioning, releasing and referencing your actions.
+## Usage
+
+See [action.yml](action.yml)
+
+Basic:
+
+```yaml
+steps:
+- uses: actions/checkout@v1
+- uses: raftario/setup-rust-action@v1
+  with:
+    rust-channel: 'stable'
+- run: cargo test
+```
+
+Matrix Testing:
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust-channel: [ 'stable', 'nightly' ]
+        rust-host: [ 'x86_64-unknown-linux-gnu', 'i686-unknown-linux-gnu' ]
+    name: Rust ${{ matrix.rust-channel }}-${{ matrix.rust-host }} sample
+    steps:
+      - uses: actions/checkout@v1
+      - uses: raftario/setup-rust-action@v1
+        with:
+          rust-channel: ${{ matrix.rust-channel }}
+          rust-host: ${{ matrix.rust-host }}
+      - name: Setup Rust
+      - run: cargo test
+```
+
+## License
+
+The scripts and documentation in this project are released under the [MIT License](LICENSE)

@@ -9,7 +9,7 @@ inputs:
     description: 'Rust host to use (defaults to current platform)'
     default: ''
   rust-target:
-    description: 'Rust target to compile for (defaults to current host)'
+    description: 'Rust target to compile for (defaults to current none)'
     default: ''
   install-rustfmt:
     description: 'Enable caching (anything but ''true'' defaults to ''false'')'
