@@ -15,17 +15,17 @@ describe("setup tests", () => {
   const cargoPath: string = process.env.CARGO_HOME || path.join(homePath, ".cargo");
   const rustupPath: string = process.env.RUSTUP_HOME || path.join(homePath, ".rustup");
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     // Remove installation dirs
     await io.rmRF(cargoPath);
     await io.rmRF(rustupPath);
-  });
+  }, 30 * 1000);
 
-  afterAll(async () => {
+  afterEach(async () => {
     // Remove installation dirs
     await io.rmRF(cargoPath);
     await io.rmRF(rustupPath);
-  });
+  }, 30 * 1000);
 
   it("Completes the setup process with defaults", async () => {
     // Inputs
@@ -48,15 +48,36 @@ describe("setup tests", () => {
     await cache(cargoPath, rustupPath, rustChannel, rustHost);
   }, 10 * 60 * 1000);
 
-  it("Completes the setup process with a custom host and channel and rustfmt and clippy", async () => {
+  it("Completes the setup process with rustfmt and clippy", async () => {
+    // Inputs
+    const rustChannel: string = "";
+    const rustHost: string = "";
+    const rustTarget: string = "";
+    const installRustfmt: boolean = true;
+    const installClippy: boolean = true;
+    const installCross: boolean = false;
+    const customInstalls: ICustomInstalls = {
+      rustfmt: installRustfmt,
+      clippy: installClippy,
+      cross: installCross,
+    };
+
+    await restore(cargoPath, rustupPath, rustChannel, rustHost);
+    await prepare(cargoPath);
+    await install(rustChannel, rustHost, rustTarget, customInstalls);
+    await verify(customInstalls);
+    await cache(cargoPath, rustupPath, rustChannel, rustHost);
+  }, 10 * 60 * 1000);
+
+  it("Completes the setup process with a custom host and channel", async () => {
     // Inputs
     const rustChannel: string = "nightly";
     const rustHost: string = windows
       ? "i686-pc-windows-msvc"
       : (macos ? "i686-apple-darwin" : "i686-unknown-linux-gnu");
     const rustTarget: string = "";
-    const installRustfmt: boolean = true;
-    const installClippy: boolean = true;
+    const installRustfmt: boolean = false;
+    const installClippy: boolean = false;
     const installCross: boolean = false;
     const customInstalls: ICustomInstalls = {
       rustfmt: installRustfmt,
