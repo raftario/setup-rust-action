@@ -12,6 +12,7 @@ export async function restore(cargoPath: string, rustupPath: string, targetPath:
 
   const copyOptions: io.CopyOptions = {
     force: true,
+    recursive: true,
   };
 
   // Restore cargo and rustup
