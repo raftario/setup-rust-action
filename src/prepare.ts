@@ -1,19 +1,15 @@
 import * as core from "@actions/core";
-import { parseCargoBinPath } from "./misc";
+import * as path from "path";
 
 export default async function prepare(cargoPath: string) {
   core.startGroup("Prepare setup");
 
-  const cargoBinPath: string = parseCargoBinPath(cargoPath);
+  const cargoBinPath: string = path.join(cargoPath, "bin");
 
   // Add cargo bin dir to path
-  const path: string = process.env.PATH || "";
-  if (!path.includes(cargoBinPath)) {
+  const envPath: string = process.env.PATH || "";
+  if (!envPath.includes(cargoBinPath)) {
     core.addPath(cargoBinPath);
-    if (!path.endsWith(";")) {
-      process.env.PATH += ";";
-    }
-    process.env.PATH += cargoBinPath;
   }
 
   core.endGroup();

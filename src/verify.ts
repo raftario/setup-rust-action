@@ -1,22 +1,29 @@
 import * as core from "@actions/core";
 import * as io from "@actions/io";
-import { parseCargoBinPath } from "./misc";
+import { aExec } from "./misc";
 
 export default async function prepare(cargoPath: string, installCross: boolean) {
   core.startGroup("Prepare setup");
 
-  const cargoBinPath: string = parseCargoBinPath(cargoPath);
+  const versionArgs: string[] = ["--version"];
 
   // Check for tools
   core.debug("Veryfing rustc installation");
-  await io.which("rustc", true);
+  const rustcBin: string = await io.which("rustc", true);
+  await aExec(rustcBin, versionArgs);
+
   core.debug("Veryfing cargo installation");
-  await io.which("cargo", true);
+  const cargoBin: string = await io.which("cargo", true);
+  await aExec(cargoBin, versionArgs);
+
   core.debug("Veryfing rustup installation");
-  await io.which("rustup", true);
+  const rustupBin: string = await io.which("rustup", true);
+  await aExec(rustupBin, versionArgs);
+
   if (installCross) {
     core.debug("Veryfing cross installation");
-    await io.which("cross", true);
+    const crossBin: string = await io.which("cross", true);
+    await aExec(crossBin, versionArgs);
   }
 
   core.endGroup();

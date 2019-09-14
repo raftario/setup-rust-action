@@ -22,7 +22,3 @@ export function parseRustToolchain(rustChannel: string, rustHost: string): strin
     ? rustChannel + (rustHost.length > 0 ? "-" + rustHost : "")
     : "stable";
 }
-
-export function parseCargoBinPath(cargoPath: string): string {
-  return path.join(cargoPath, "bin");
-}
