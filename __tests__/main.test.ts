@@ -45,8 +45,8 @@ describe("setup tests", () => {
     await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls);
-    await verify(customInstalls);
     await cache(cargoPath, rustupPath, targetPath);
+    await verify(customInstalls);
   }, 10 * 60 * 1000);
 
   it("Completes the setup process with rustfmt and clippy", async () => {
@@ -66,8 +66,8 @@ describe("setup tests", () => {
     await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls);
-    await verify(customInstalls);
     await cache(cargoPath, rustupPath, targetPath);
+    await verify(customInstalls);
   }, 10 * 60 * 1000);
 
   it("Completes the setup process with a custom host and channel", async () => {
@@ -89,8 +89,8 @@ describe("setup tests", () => {
     await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls);
-    await verify(customInstalls);
     await cache(cargoPath, rustupPath, targetPath);
+    await verify(customInstalls);
   }, 10 * 60 * 1000);
 
   if (!windows) {
@@ -111,8 +111,8 @@ describe("setup tests", () => {
       await restore(cargoPath, rustupPath, targetPath);
       await prepare(cargoPath);
       await install(rustChannel, rustHost, rustTarget, customInstalls);
-      await verify(customInstalls);
       await cache(cargoPath, rustupPath, targetPath);
+      await verify(customInstalls);
     }, 10 * 60 * 1000);
   }
 });

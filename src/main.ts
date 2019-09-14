@@ -38,10 +38,10 @@ async function run() {
     }
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls);
-    await verify(customInstalls);
     if (enableCache) {
       await cache(cargoPath, rustupPath, targetPath);
     }
+    await verify(customInstalls);
   } catch (error) {
     core.setFailed(error.message);
   }
