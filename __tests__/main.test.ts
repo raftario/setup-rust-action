@@ -14,6 +14,7 @@ describe("setup tests", () => {
   const homePath: string = process.env.HOME || (windows ? "%USERPROFILE%" : "~");
   const cargoPath: string = process.env.CARGO_HOME || path.join(homePath, ".cargo");
   const rustupPath: string = process.env.RUSTUP_HOME || path.join(homePath, ".rustup");
+  const targetPath: string = "/dev/null";
 
   beforeEach(async () => {
     // Remove installation dirs
@@ -41,11 +42,11 @@ describe("setup tests", () => {
       cross: installCross,
     };
 
-    await restore(cargoPath, rustupPath, rustChannel, rustHost);
+    await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls);
     await verify(customInstalls);
-    await cache(cargoPath, rustupPath, rustChannel, rustHost);
+    await cache(cargoPath, rustupPath, targetPath);
   }, 10 * 60 * 1000);
 
   it("Completes the setup process with rustfmt and clippy", async () => {
@@ -62,11 +63,11 @@ describe("setup tests", () => {
       cross: installCross,
     };
 
-    await restore(cargoPath, rustupPath, rustChannel, rustHost);
+    await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls);
     await verify(customInstalls);
-    await cache(cargoPath, rustupPath, rustChannel, rustHost);
+    await cache(cargoPath, rustupPath, targetPath);
   }, 10 * 60 * 1000);
 
   it("Completes the setup process with a custom host and channel", async () => {
@@ -85,11 +86,11 @@ describe("setup tests", () => {
       cross: installCross,
     };
 
-    await restore(cargoPath, rustupPath, rustChannel, rustHost);
+    await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
     await install(rustChannel, rustHost, rustTarget, customInstalls);
     await verify(customInstalls);
-    await cache(cargoPath, rustupPath, rustChannel, rustHost);
+    await cache(cargoPath, rustupPath, targetPath);
   }, 10 * 60 * 1000);
 
   if (!windows) {
@@ -107,11 +108,11 @@ describe("setup tests", () => {
         cross: installCross,
       };
 
-      await restore(cargoPath, rustupPath, rustChannel, rustHost);
+      await restore(cargoPath, rustupPath, targetPath);
       await prepare(cargoPath);
       await install(rustChannel, rustHost, rustTarget, customInstalls);
       await verify(customInstalls);
-      await cache(cargoPath, rustupPath, rustChannel, rustHost);
+      await cache(cargoPath, rustupPath, targetPath);
     }, 10 * 60 * 1000);
   }
 });

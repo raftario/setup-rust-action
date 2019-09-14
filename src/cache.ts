@@ -7,7 +7,7 @@ const pjPath = path.join(__dirname, "..", "package.json");
 // tslint:disable:no-var-requires
 const pj = require(pjPath);
 
-export async function restore(cargoPath: string, rustupPath: string, rustChannel: string, rustHost: string) {
+export async function restore(cargoPath: string, rustupPath: string, targetPath: string) {
   core.startGroup("Restore cache");
 
   const moveOptions: io.MoveOptions = {
@@ -34,10 +34,21 @@ export async function restore(cargoPath: string, rustupPath: string, rustChannel
     core.error(error.message);
   }
 
+  // Restore target
+  try {
+    core.debug("Restoring build artifacts");
+    const cachedTargetPath: string = tc.find("target", pj.version);
+    if (cachedTargetPath.length > 0) {
+      await io.mv(cachedTargetPath, targetPath, moveOptions);
+    }
+  } catch (error) {
+    core.error(error.message);
+  }
+
   core.endGroup();
 }
 
-export async function cache(cargoPath: string, rustupPath: string, rustChannel: string, rustHost: string) {
+export async function cache(cargoPath: string, rustupPath: string, targetPath: string) {
   core.startGroup("Cache");
 
   // Cache .cargo and .rustup
@@ -50,6 +61,14 @@ export async function cache(cargoPath: string, rustupPath: string, rustChannel: 
   try {
     core.debug("Caching rustup");
     await tc.cacheDir(rustupPath, "rustup", pj.version);
+  } catch (error) {
+    core.error(error.message);
+  }
+
+  // Cache target
+  try {
+    core.debug("Caching build artifacts");
+    await tc.cacheDir(targetPath, "target", pj.version);
   } catch (error) {
     core.error(error.message);
   }
