@@ -44,7 +44,7 @@ describe("setup tests", () => {
 
     await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
-    await install(rustChannel, rustHost, rustTarget, customInstalls);
+    await install(rustChannel, rustHost, rustTarget, customInstalls, cargoPath);
     await cache(cargoPath, rustupPath, targetPath);
     await verify(customInstalls);
   }, 10 * 60 * 1000);
@@ -65,7 +65,7 @@ describe("setup tests", () => {
 
     await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
-    await install(rustChannel, rustHost, rustTarget, customInstalls);
+    await install(rustChannel, rustHost, rustTarget, customInstalls, cargoPath);
     await cache(cargoPath, rustupPath, targetPath);
     await verify(customInstalls);
   }, 10 * 60 * 1000);
@@ -88,7 +88,7 @@ describe("setup tests", () => {
 
     await restore(cargoPath, rustupPath, targetPath);
     await prepare(cargoPath);
-    await install(rustChannel, rustHost, rustTarget, customInstalls);
+    await install(rustChannel, rustHost, rustTarget, customInstalls, cargoPath);
     await cache(cargoPath, rustupPath, targetPath);
     await verify(customInstalls);
   }, 10 * 60 * 1000);
@@ -110,7 +110,7 @@ describe("setup tests", () => {
 
       await restore(cargoPath, rustupPath, targetPath);
       await prepare(cargoPath);
-      await install(rustChannel, rustHost, rustTarget, customInstalls);
+      await install(rustChannel, rustHost, rustTarget, customInstalls, cargoPath);
       await cache(cargoPath, rustupPath, targetPath);
       await verify(customInstalls);
     }, 10 * 60 * 1000);

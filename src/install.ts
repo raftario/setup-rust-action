@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import * as io from "@actions/io";
 import * as tc from "@actions/tool-cache";
-import { aExec } from "./misc";
+import { addCargoBinPath, aExec } from "./misc";
 import { ICustomInstalls } from "./types";
 
 function parseRustToolchain(rustChannel: string, rustHost: string): string {
@@ -15,6 +15,7 @@ export default async function install(
   rustHost: string,
   rustTarget: string,
   customInstalls: ICustomInstalls,
+  cargoPath: string,
 ) {
   core.startGroup("Install and/or update Rust toolchain");
 
@@ -65,6 +66,9 @@ export default async function install(
       await aExec("chmod", ["+x", installerPath]);
     }
     await aExec(installerPath, installerArgs);
+
+    // Add cargo bin dir to path
+    addCargoBinPath(cargoPath);
   }
 
   // Get rustup binary path

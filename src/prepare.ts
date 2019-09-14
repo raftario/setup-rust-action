@@ -1,18 +1,13 @@
 import * as core from "@actions/core";
 import * as io from "@actions/io";
 import * as path from "path";
+import { addCargoBinPath } from "./misc";
 
 export default async function prepare(cargoPath: string) {
   core.startGroup("Prepare setup");
 
-  const cargoBinPath: string = path.join(cargoPath, "bin");
-
   // Add cargo bin dir to path
-  const envPath: string = process.env.PATH || "";
-  if (!envPath.includes(cargoBinPath)) {
-    core.debug("Adding .cargo/bin to PATH");
-    core.addPath(cargoBinPath);
-  }
+  addCargoBinPath(cargoPath);
 
   // Remove rustfmt and clippy if present
   const rustfmtBin1: string = await io.which("cargo-fmt", false);
