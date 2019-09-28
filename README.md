@@ -1,5 +1,7 @@
 # setup-rust
 
+> **DISCLAIMER:** I will not be maintaining this action anymore. Take a look at [actions-rs](https://github.com/actions-rs) instead.
+
 [![GitHub Actions status](https://github.com/raftario/setup-rust-action/workflows/Main%20workflow/badge.svg)](https://github.com/raftario/setup-rust-action/actions)
 
 This action sets up a Rust environment for use in actions by:
